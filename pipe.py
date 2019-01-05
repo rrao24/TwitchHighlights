@@ -20,6 +20,7 @@ request = requests.get(clips_url, params=clip_params, headers=clip_headers)
 clips = request.json()["clips"]
 
 clip_urls = [ clip["url"].split("?")[0] for clip in clips ]
+broadcaster_urls = list(set([clip["broadcaster"]['channel_url'] for clip in clips]))
 
 #Clear download folders, text file
 folder = 'downloads'
@@ -33,3 +34,8 @@ open('clips.txt', 'w').close()
 f = open("clips.txt", "w")
 for url in clip_urls:
 	f.write(url + "\n")
+
+yt_description = "Fortnite Stream Highlights\nCheck out the featured channels:\n"
+for url in broadcaster_urls:
+	yt_description += url + "\n"
+print(yt_description)
