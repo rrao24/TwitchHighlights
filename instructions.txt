@@ -1,0 +1,3 @@
+run 'sh run.sh' in terminal
+merge clips together on https://mergevideo.online/, and download file
+upload to youtube
