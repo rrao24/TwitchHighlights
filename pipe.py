@@ -23,11 +23,12 @@ clip_urls = [ clip["url"].split("?")[0] for clip in clips ]
 broadcaster_urls = list(set([clip["broadcaster"]['channel_url'] for clip in clips]))
 
 #Clear download folders, text file
-folder = 'downloads'
-for the_file in os.listdir(folder):
-    file_path = os.path.join(folder, the_file)
-    if os.path.isfile(file_path):
-        os.unlink(file_path)
+folders = ['downloads', 'transcoded_outputs']
+for folder in folders:
+	for the_file in os.listdir(folder):
+	    file_path = os.path.join(folder, the_file)
+	    if os.path.isfile(file_path):
+	        os.unlink(file_path)
 open('clips.txt', 'w').close()
 
 
