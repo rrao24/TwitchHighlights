@@ -41,7 +41,7 @@ mpg_files_str = ''
 for mpg_file in mpg_file_list:
     mpg_files_str = mpg_files_str + mpg_file + '|'
 
-cmd = 'ffmpeg -i concat:"' + mpg_files_str + '" -c:v libx264 -preset slow -crf ' + str(VIDEO_QUALITY) + ' -c:a aac -strict -2 ' + MP4_RESULT_FILE
+cmd = 'ffmpeg -i concat:"' + mpg_files_str + '" -c:v libx264 -preset slow -crf ' + str(VIDEO_QUALITY) + ' -c:a aac -strict -2 -vf select=concatdec_select -af aselect=concatdec_select,aresample=async=1 ' + MP4_RESULT_FILE
 log.info(cmd)
 os.system(cmd)
 
