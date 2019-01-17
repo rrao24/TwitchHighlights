@@ -7,11 +7,18 @@ import datetime
 
 APP_NAME = 'mp4-merge'
 indir = 'transcoded_outputs/'
+outdir = 'final_outputs/'
+
+if not os.path.isdir('transcoded_outputs'):
+    indir = 'downloads/'
+    
+if not os.path.isdir(outdir):
+        os.makedirs(outdir)
 
 INPUT_EXT1 = '.MP4'
 OUT_EXT1 = '.mpg'
 date = datetime.datetime.today().strftime('%Y-%m-%d')
-MP4_RESULT_FILE = 'final_outputs/' + date + '-output.mp4'
+MP4_RESULT_FILE = outdir + date + '-output.mp4'
 VIDEO_QUALITY = 22 #22=10300 Kbps, 23=, 24=6000 Kbps
 
 
@@ -49,3 +56,4 @@ os.system(cmd)
 log.info('Removing temp dir ' + tmpdir + '...')
 shutil.rmtree(tmpdir)
 log.info('DONE')
+lfh.close()
