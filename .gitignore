@@ -2,6 +2,10 @@ downloads/
 transcoded_outputs/
 final_outputs/
 clips.txt
-yt_description.txt
+ytdescription.txt
 broadcasters.txt
 .DS_Store
+__pycache__/
+mp4-merge.log
+HandBrakeCLI
+TwitchCLipsPipeline.ipynb
