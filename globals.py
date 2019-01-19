@@ -43,3 +43,6 @@ def init():
 
 	global YT_DESCRIPTION_HEADER
 	YT_DESCRIPTION_HEADER = 'Fortnite Stream Highlights\nCheck out the featured channels:\n'
+
+	global VIDEO_QUALITY
+	VIDEO_QUALITY = 22
