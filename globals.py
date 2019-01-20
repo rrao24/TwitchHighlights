@@ -46,3 +46,6 @@ def init():
 
 	global VIDEO_QUALITY
 	VIDEO_QUALITY = 22
+
+	global BUCKET_NAME
+	BUCKET_NAME = 'twitch-highlights'

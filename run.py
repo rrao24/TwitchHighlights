@@ -1,6 +1,7 @@
 import lib.twitch as Twitch
 import lib.filesystem as FileSystem
 import lib.processing as Processing
+import lib.s3 as S3
 import globals
 
 globals.init()
@@ -13,4 +14,5 @@ FileSystem.writeClipUrls(clipUrls)
 FileSystem.writeYTDescription(broadcasterUrls)
 Twitch.downloadTwitchClips()
 Processing.applyHandbrake()
-Processing.mergeMP4()
+fileName = Processing.mergeMP4()
+S3.uploadToS3(fileName)

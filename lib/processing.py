@@ -50,3 +50,4 @@ def mergeMP4():
 	os.system(cmd)
 
 	shutil.rmtree(tmpdir)
+	return MP4_RESULT_FILE
