@@ -41,6 +41,9 @@ def init():
 	global YT_DESCRIPTION_FILE_NAME
 	YT_DESCRIPTION_FILE_NAME = 'ytdescription.txt'
 
+	global TMP_FILES
+	TMP_FILES = [CLIPS_FILE_NAME, YT_DESCRIPTION_FILE_NAME]
+
 	global YT_DESCRIPTION_HEADER
 	YT_DESCRIPTION_HEADER = 'Fortnite Stream Highlights\nCheck out the featured channels:\n'
 

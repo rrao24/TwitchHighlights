@@ -3,10 +3,9 @@ import datetime
 import re
 import urllib.request
 import sys
-import globals
 
-def getTwitchClips():
-	request = requests.get(globals.CLIPS_URL, params=globals.CLIP_PARAMS, headers=globals.CLIP_HEADERS)
+def getTwitchClips(clipsUrl, clipParams, clipHeaders):
+	request = requests.get(clipsUrl, params=clipParams, headers=clipHeaders)
 	clips = request.json()["clips"]
 	nonDuplicateClips = removeDuplicateClips(clips)
 	return nonDuplicateClips
@@ -40,27 +39,25 @@ def removeDuplicateClips(clips):
 	return nonDuplicateClips
 
 def getClipUrls(clips):
-	clip_urls = [ clip["url"].split("?")[0] for clip in clips ]
-	return clip_urls
+	clipUrls = [ clip["url"].split("?")[0] for clip in clips ]
+	return clipUrls
 
 def getBroadcasterUrls(clips):
 	#cite broadcasters
-	broadcaster_urls = [clip["broadcasterUrl"] for clip in clips]
-	broadcaster_urls_uniq = list(set(broadcaster_urls))
-	return broadcaster_urls_uniq
+	broadcasterUrls = [clip["broadcasterUrl"] for clip in clips]
+	broadcasterUrlsUnique = list(set(broadcasterUrls))
+	return broadcasterUrlsUnique
 
-def downloadTwitchClips():
-	basepath = globals.DOWNLOADS_FOLDER_NAME + '/'
-
+def downloadTwitchClips(inFile, toFile, downloadClipsUrl, clientID):
 	# for each clip in clips.txt
-	with open(globals.CLIPS_FILE_NAME, 'r') as read_clips:
+	with open(inFile, 'r') as read_clips:
 		for clip in read_clips:
 			slug = clip.split('/')[3].replace('\n', '')
-			mp4_url, clip_title = retrieve_mp4_data(slug)
+			mp4_url, clip_title = retrieve_mp4_data(slug, downloadClipsUrl, clientID)
 			regex = re.compile('[^a-zA-Z0-9_]')
 			clip_title = clip_title.replace(' ', '_')
 			out_filename = regex.sub('', clip_title) + '.mp4'
-			output_path = (basepath + out_filename)
+			output_path = (toFile + out_filename)
 
 			print('\nDownloading clip slug: ' + slug)
 			print('"' + clip_title + '" -> ' + out_filename)
@@ -69,10 +66,10 @@ def downloadTwitchClips():
 			print('\nDone.')
 
 
-def retrieve_mp4_data(slug):
+def retrieve_mp4_data(slug, downloadClipsUrl, clientID):
 	clip_info = requests.get(
-	    globals.DOWNLOAD_CLIPS_URL + slug,
-	    headers={"Client-ID": globals.CLIENT_ID}).json()
+	    downloadClipsUrl + slug,
+	    headers={"Client-ID": clientID}).json()
 	thumb_url = clip_info['data'][0]['thumbnail_url']
 	title = clip_info['data'][0]['title']
 	slice_point = thumb_url.index("-preview-")
