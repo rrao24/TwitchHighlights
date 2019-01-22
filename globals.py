@@ -1,3 +1,5 @@
+import datetime
+
 def init():
 
 	global CLIPS_URL
@@ -52,3 +54,9 @@ def init():
 
 	global OUTPUTS_BUCKET_NAME
 	OUTPUTS_BUCKET_NAME = 'twitch-highlights'
+
+	global MINS_DIFF_FOR_DUPLICATE_DETECTION
+	MINS_DIFF_FOR_DUPLICATE_DETECTION = 30
+
+	global DATE
+	DATE = datetime.datetime.today().strftime('%Y-%m-%d')

@@ -4,14 +4,15 @@ import re
 import urllib.request
 import sys
 
-def getTwitchClips(clipsUrl, clipParams, clipHeaders):
+def getTwitchClips(clipsUrl, clipParams, clipHeaders, minsDiffForDuplicateDetection):
 	request = requests.get(clipsUrl, params=clipParams, headers=clipHeaders)
 	clips = request.json()["clips"]
-	nonDuplicateClips = removeDuplicateClips(clips)
+	nonDuplicateClips = removeDuplicateClips(clips, minsDiffForDuplicateDetection)
 	return nonDuplicateClips
 
-def removeDuplicateClips(clips):
+def removeDuplicateClips(clips, minsDiffForDuplicateDetection):
 	#parse appropriate information
+	print('here')
 	tmpClips = []
 
 	for clip in clips:
@@ -30,7 +31,7 @@ def removeDuplicateClips(clips):
 		for j in range(i + 1, len(tmpClips)):
 			minsDiff = abs((tmpClips[i]['created_at'] - tmpClips[j]['created_at']).days * 24 * 60)
 			sameStreamer = tmpClips[i]['broadcaster'] == tmpClips[j]['broadcaster']
-			if sameStreamer and minsDiff < 30:
+			if sameStreamer and minsDiff < minsDiffForDuplicateDetection:
 				tmpClips[i]['duplicate'] = True
 				break
 		if tmpClips[i]['duplicate'] == False:
@@ -50,34 +51,34 @@ def getBroadcasterUrls(clips):
 
 def downloadTwitchClips(inFile, toFile, downloadClipsUrl, clientID):
 	# for each clip in clips.txt
-	with open(inFile, 'r') as read_clips:
-		for clip in read_clips:
+	with open(inFile, 'r') as readClips:
+		for clip in readClips:
 			slug = clip.split('/')[3].replace('\n', '')
-			mp4_url, clip_title = retrieve_mp4_data(slug, downloadClipsUrl, clientID)
+			mp4Url, clipTitle = retrieveMp4Data(slug, downloadClipsUrl, clientID)
 			regex = re.compile('[^a-zA-Z0-9_]')
-			clip_title = clip_title.replace(' ', '_')
-			out_filename = regex.sub('', clip_title) + '.mp4'
-			output_path = (toFile + out_filename)
+			clipTitle = clipTitle.replace(' ', '_')
+			outFilename = regex.sub('', clipTitle) + '.mp4'
+			outputPath = (toFile + outFilename)
 
 			print('\nDownloading clip slug: ' + slug)
-			print('"' + clip_title + '" -> ' + out_filename)
-			print(mp4_url)
-			urllib.request.urlretrieve(mp4_url, output_path, reporthook=dl_progress)
+			print('"' + clipTitle + '" -> ' + outFilename)
+			print(mp4Url)
+			urllib.request.urlretrieve(mp4Url, outputPath, reporthook=dlProgress)
 			print('\nDone.')
 
 
-def retrieve_mp4_data(slug, downloadClipsUrl, clientID):
-	clip_info = requests.get(
+def retrieveMp4Data(slug, downloadClipsUrl, clientID):
+	clipInfo = requests.get(
 	    downloadClipsUrl + slug,
 	    headers={"Client-ID": clientID}).json()
-	thumb_url = clip_info['data'][0]['thumbnail_url']
-	title = clip_info['data'][0]['title']
-	slice_point = thumb_url.index("-preview-")
-	mp4_url = thumb_url[:slice_point] + '.mp4'
-	return mp4_url, title
+	thumbUrl = clipInfo['data'][0]['thumbnail_url']
+	title = clipInfo['data'][0]['title']
+	slicePoint = thumbUrl.index("-preview-")
+	mp4Url = thumbUrl[:slicePoint] + '.mp4'
+	return mp4Url, title
 
 
-def dl_progress(count, block_size, total_size):
-	percent = int(count * block_size * 100 / total_size)
+def dlProgress(count, blockSize, totalSize):
+	percent = int(count * blockSize * 100 / totalSize)
 	sys.stdout.write("\r...%d%%" % percent)
 	sys.stdout.flush()
