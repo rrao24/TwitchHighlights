@@ -12,7 +12,6 @@ def getTwitchClips(clipsUrl, clipParams, clipHeaders, minsDiffForDuplicateDetect
 
 def removeDuplicateClips(clips, minsDiffForDuplicateDetection):
 	#parse appropriate information
-	print('here')
 	tmpClips = []
 
 	for clip in clips:
@@ -49,22 +48,21 @@ def getBroadcasterUrls(clips):
 	broadcasterUrlsUnique = list(set(broadcasterUrls))
 	return broadcasterUrlsUnique
 
-def downloadTwitchClips(inFile, toFile, downloadClipsUrl, clientID):
+def downloadTwitchClips(clipUrls, toFile, downloadClipsUrl, clientID):
 	# for each clip in clips.txt
-	with open(inFile, 'r') as readClips:
-		for clip in readClips:
-			slug = clip.split('/')[3].replace('\n', '')
-			mp4Url, clipTitle = retrieveMp4Data(slug, downloadClipsUrl, clientID)
-			regex = re.compile('[^a-zA-Z0-9_]')
-			clipTitle = clipTitle.replace(' ', '_')
-			outFilename = regex.sub('', clipTitle) + '.mp4'
-			outputPath = (toFile + outFilename)
+	for clip in clipUrls:
+		slug = clip.split('/')[3].replace('\n', '')
+		mp4Url, clipTitle = retrieveMp4Data(slug, downloadClipsUrl, clientID)
+		regex = re.compile('[^a-zA-Z0-9_]')
+		clipTitle = clipTitle.replace(' ', '_')
+		outFilename = regex.sub('', clipTitle) + '.mp4'
+		outputPath = (toFile + outFilename)
 
-			print('\nDownloading clip slug: ' + slug)
-			print('"' + clipTitle + '" -> ' + outFilename)
-			print(mp4Url)
-			urllib.request.urlretrieve(mp4Url, outputPath, reporthook=dlProgress)
-			print('\nDone.')
+		print('\nDownloading clip slug: ' + slug)
+		print('"' + clipTitle + '" -> ' + outFilename)
+		print(mp4Url)
+		urllib.request.urlretrieve(mp4Url, outputPath, reporthook=dlProgress)
+		print('\nDone.')
 
 
 def retrieveMp4Data(slug, downloadClipsUrl, clientID):

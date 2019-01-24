@@ -14,30 +14,33 @@ clips = Twitch.getTwitchClips(clipsUrl=globals.CLIPS_URL,
 clipUrls = Twitch.getClipUrls(clips)
 broadcasterUrls = Twitch.getBroadcasterUrls(clips)
 
+FileSystem.makeFolder(globals.DOWNLOADS_FOLDER_NAME)
+FileSystem.makeFolder(globals.TRANSCODED_FOLDER_NAME)
+FileSystem.makeFolder(globals.FINAL_OUTPUTS_FOLDER_NAME)
 for folder in globals.TMP_FOLDERS:
 	FileSystem.clearFolder(folder)
-for file in globals.TMP_FILES:
-	FileSystem.clearFile(file)
+FileSystem.clearFile(globals.YT_DESCRIPTION_FILE_NAME)
 
-FileSystem.writeClipUrls(clipUrls=clipUrls, fileName=globals.CLIPS_FILE_NAME)
 FileSystem.writeYTDescription(broadcasterUrls=broadcasterUrls,
 	fileName=globals.YT_DESCRIPTION_FILE_NAME,
 	header=globals.YT_DESCRIPTION_HEADER)
 
-Twitch.downloadTwitchClips(inFile=globals.CLIPS_FILE_NAME,
+Twitch.downloadTwitchClips(clipUrls=clipUrls,
 	toFile=globals.DOWNLOADS_FOLDER_NAME + '/',
 	downloadClipsUrl=globals.DOWNLOAD_CLIPS_URL,
 	clientID=globals.CLIENT_ID)
 
-Processing.applyHandbrake(indir=globals.DOWNLOADS_FOLDER_NAME, outdir=globals.TRANSCODED_FOLDER_NAME)
+clips = FileSystem.getAllFilesInFolder(globals.DOWNLOADS_FOLDER_NAME)
+Processing.applyHandbrake(indir=globals.DOWNLOADS_FOLDER_NAME, clips=clips, outdir=globals.TRANSCODED_FOLDER_NAME)
 fileName = Processing.mergeMP4(indir=globals.TRANSCODED_FOLDER_NAME + '/',
 	outdir=globals.FINAL_OUTPUTS_FOLDER_NAME + '/',
 	videoQuality=globals.VIDEO_QUALITY,
 	date=globals.DATE)
 
-clips = [f for f in os.listdir(globals.TRANSCODED_FOLDER_NAME) if os.path.isfile(os.path.join(globals.TRANSCODED_FOLDER_NAME, f)) and not f.startswith('.')]
+clips = FileSystem.getAllFilesInFolder(globals.TRANSCODED_FOLDER_NAME)
 for clip in clips:
 	S3.uploadToS3(inFile=globals.TRANSCODED_FOLDER_NAME + '/' + clip,
 		bucketName=globals.OUTPUTS_BUCKET_NAME,
 		outFile='clips' + '/' + globals.DATE + '/' + clip)
 S3.uploadToS3(inFile=fileName, bucketName=globals.OUTPUTS_BUCKET_NAME, outFile=fileName)
+S3.uploadToS3(inFile=globals.YT_DESCRIPTION_FILE_NAME, bucketName=globals.OUTPUTS_BUCKET_NAME, outFile='descriptions' + '/' + globals.DATE + '/' + globals.YT_DESCRIPTION_FILE_NAME)

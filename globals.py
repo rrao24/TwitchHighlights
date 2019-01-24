@@ -37,14 +37,8 @@ def init():
 	global FINAL_OUTPUTS_FOLDER_NAME
 	FINAL_OUTPUTS_FOLDER_NAME = 'final_outputs'
 
-	global CLIPS_FILE_NAME
-	CLIPS_FILE_NAME = 'clips.txt'
-
 	global YT_DESCRIPTION_FILE_NAME
 	YT_DESCRIPTION_FILE_NAME = 'ytdescription.txt'
-
-	global TMP_FILES
-	TMP_FILES = [CLIPS_FILE_NAME, YT_DESCRIPTION_FILE_NAME]
 
 	global YT_DESCRIPTION_HEADER
 	YT_DESCRIPTION_HEADER = 'Fortnite Stream Highlights\nCheck out the featured channels:\n'

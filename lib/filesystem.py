@@ -1,21 +1,20 @@
 import os
 
-def clearFolder(folder):
+def getAllFilesInFolder(folder):
+    return [f for f in os.listdir(folder) if os.path.isfile(os.path.join(folder, f)) and not f.startswith('.')]
+
+def makeFolder(folder):
     if not os.path.isdir(folder):
         os.makedirs(folder)
-    for the_file in os.listdir(folder):
-        file_path = os.path.join(folder, the_file)
-        if os.path.isfile(file_path):
-            os.unlink(file_path)
+
+def clearFolder(folder):
+    for theFile in os.listdir(folder):
+        filePath = os.path.join(folder, theFile)
+        if os.path.isfile(filePath):
+            os.unlink(filePath)
 
 def clearFile(file):
     open(file, 'w').close()
-
-def writeClipUrls(clipUrls, fileName):
-    #write file of clip urls to download
-    with open(fileName, "w") as clipFile:
-        for url in clipUrls:
-            clipFile.write(url + "\n")
 
 def writeYTDescription(broadcasterUrls, fileName, header):
     #write description to video

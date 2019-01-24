@@ -4,20 +4,14 @@ import tempfile
 import shutil
 import datetime
 
-def applyHandbrake(indir, outdir):
-	clips = [f for f in os.listdir(indir) if os.path.isfile(os.path.join(indir, f)) and not f.startswith('.')]
-
+def applyHandbrake(indir, clips, outdir):
 	for clip in clips:
 		inClip = indir + '/' + clip
 		outClip = outdir + '/' + clip
 		print(subprocess.check_output(['./HandBrakeCLI', '-i', inClip, '-o', outClip]))
 
 def mergeMP4(indir, outdir, videoQuality, date):
-	if not os.path.isdir(outdir):
-		os.makedirs(outdir)
-
 	mp4ResultFile = outdir + date + '-output.mp4'
-
 	tmpdir = tempfile.mkdtemp()
 
 	mpgFileList = list()
