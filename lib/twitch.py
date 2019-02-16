@@ -39,7 +39,7 @@ def removeDuplicateClips(clips, minsDiffForDuplicateDetection):
 	return nonDuplicateClips
 
 def getClipUrls(clips):
-	clipUrls = [ clip["url"].split("?")[0] for clip in clips ]
+	clipUrls = [clip["url"].split("?")[0] for clip in clips]
 	return clipUrls
 
 def getBroadcasterUrls(clips):

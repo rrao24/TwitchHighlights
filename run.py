@@ -2,7 +2,6 @@ import lib.twitch as Twitch
 import lib.filesystem as FileSystem
 import lib.processing as Processing
 import lib.s3 as S3
-import os
 import globals
 
 globals.init()
@@ -32,7 +31,10 @@ Twitch.downloadTwitchClips(clipUrls=clipUrls,
 
 clips = FileSystem.getAllFilesInFolder(globals.DOWNLOADS_FOLDER_NAME)
 Processing.applyHandbrake(indir=globals.DOWNLOADS_FOLDER_NAME, clips=clips, outdir=globals.TRANSCODED_FOLDER_NAME)
+
+clips = FileSystem.getAllFilesInFolder(globals.TRANSCODED_FOLDER_NAME)
 fileName = Processing.mergeMP4(indir=globals.TRANSCODED_FOLDER_NAME + '/',
+	clips=clips,
 	outdir=globals.FINAL_OUTPUTS_FOLDER_NAME + '/',
 	videoQuality=globals.VIDEO_QUALITY,
 	date=globals.DATE)
