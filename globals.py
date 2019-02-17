@@ -1,6 +1,10 @@
 import datetime
+import os
 
 def init():
+
+	global ENVIRONMENT
+	ENVIRONMENT = os.getenv("ENVIRONMENT")
 
 	global CLIPS_URL
 	CLIPS_URL = "https://api.twitch.tv/kraken/clips/top"
@@ -17,7 +21,7 @@ def init():
 	}
 
 	global CLIENT_ID
-	CLIENT_ID = "bmqi273g9qwdztef0giu91l7150o25"
+	CLIENT_ID = os.getenv("CLIENT_ID")
 
 	global CLIP_HEADERS
 	CLIP_HEADERS = {

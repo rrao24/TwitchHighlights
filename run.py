@@ -2,8 +2,10 @@ import lib.twitch as Twitch
 import lib.filesystem as FileSystem
 import lib.processing as Processing
 import lib.s3 as S3
+from dotenv import load_dotenv
 import globals
 
+load_dotenv()
 globals.init()
 
 clips = Twitch.getTwitchClips(clipsUrl=globals.CLIPS_URL,
@@ -18,6 +20,8 @@ FileSystem.makeFolder(globals.TRANSCODED_FOLDER_NAME)
 FileSystem.makeFolder(globals.FINAL_OUTPUTS_FOLDER_NAME)
 for folder in globals.TMP_FOLDERS:
 	FileSystem.clearFolder(folder)
+if globals.ENVIRONMENT == "PROD" or globals.ENVIRONMENT == "PRODUCTION":
+	FileSystem.clearFolder(globals.FINAL_OUTPUTS_FOLDER_NAME)
 FileSystem.clearFile(globals.YT_DESCRIPTION_FILE_NAME)
 
 FileSystem.writeYTDescription(broadcasterUrls=broadcasterUrls,
