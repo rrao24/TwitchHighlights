@@ -16,9 +16,12 @@ def init():
 	CLIP_PARAMS = {
 	    "game": "Fortnite",
 	    "period": "day",
-	    "limit": 10,
+	    "limit": 100,
 	    "language": "en"
 	}
+
+	global NUM_CLIPS
+	NUM_CLIPS = 10
 
 	global CLIENT_ID
 	CLIENT_ID = os.getenv("CLIENT_ID")
@@ -43,6 +46,9 @@ def init():
 
 	global YT_DESCRIPTION_FILE_NAME
 	YT_DESCRIPTION_FILE_NAME = 'ytdescription.txt'
+
+	global WHITELIST_FILE_NAME
+	WHITELIST_FILE_NAME = 'whitelist.txt'
 
 	global YT_DESCRIPTION_HEADER
 	YT_DESCRIPTION_HEADER = 'Fortnite Stream Highlights\nCheck out the featured channels:\n'

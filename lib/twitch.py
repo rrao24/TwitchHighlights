@@ -4,11 +4,21 @@ import re
 import urllib.request
 import sys
 
-def getTwitchClips(clipsUrl, clipParams, clipHeaders, minsDiffForDuplicateDetection):
+def getTwitchClips(clipsUrl, clipParams, clipHeaders, minsDiffForDuplicateDetection, numClips, whiteListFile):
 	request = requests.get(clipsUrl, params=clipParams, headers=clipHeaders)
 	clips = request.json()["clips"]
 	nonDuplicateClips = removeDuplicateClips(clips, minsDiffForDuplicateDetection)
-	return nonDuplicateClips
+	whiteListedClips = applyWhiteList(nonDuplicateClips, numClips, whiteListFile)
+	return whiteListedClips
+
+def applyWhiteList(clips, numClips, whiteListFile):
+	whiteListedClips = []
+	whiteList = open(whiteListFile, 'r').read().splitlines()
+	whiteList = [broadcaster.lower() for broadcaster in whiteList]
+	for clip in clips:
+		if clip['broadcaster'].lower() in whiteList:
+			whiteListedClips.append(clip)
+	return whiteListedClips[:numClips]
 
 def removeDuplicateClips(clips, minsDiffForDuplicateDetection):
 	#parse appropriate information
@@ -16,7 +26,7 @@ def removeDuplicateClips(clips, minsDiffForDuplicateDetection):
 
 	for clip in clips:
 		tmpClips.append({
-		'broadcaster': clip['broadcaster']['display_name'],
+		'broadcaster': clip['broadcaster']['name'],
 		'broadcasterUrl': clip['broadcaster']['channel_url'],
 		'created_at': datetime.datetime.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%SZ"),
 		'url': clip['url'],

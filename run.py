@@ -11,7 +11,9 @@ globals.init()
 clips = Twitch.getTwitchClips(clipsUrl=globals.CLIPS_URL,
 	clipParams=globals.CLIP_PARAMS,
 	clipHeaders=globals.CLIP_HEADERS,
-	minsDiffForDuplicateDetection=globals.MINS_DIFF_FOR_DUPLICATE_DETECTION)
+	minsDiffForDuplicateDetection=globals.MINS_DIFF_FOR_DUPLICATE_DETECTION,
+	numClips=globals.NUM_CLIPS,
+	whiteListFile=globals.WHITELIST_FILE_NAME)
 clipUrls = Twitch.getClipUrls(clips)
 broadcasterUrls = Twitch.getBroadcasterUrls(clips)
 
