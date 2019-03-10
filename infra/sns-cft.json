@@ -1,0 +1,50 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Resources": {
+		"SNSTopic": {
+			"Type" : "AWS::SNS::Topic",
+		    "Properties" : {
+		    	"DisplayName": "TwitchHighlightsNotification",
+		        "Subscription" : [ {
+		            "Endpoint" : "rao.ram5718@gmail.com",
+		            "Protocol" : "email"
+		        } ]
+		    }
+		},
+		"SNSTopicPolicy": {
+	        "Type": "AWS::SNS::TopicPolicy",
+	        "Properties": {
+	            "PolicyDocument": {
+	                "Id": "TopicPolicy",
+	                "Version": "2012-10-17",
+	                "Statement": [
+	                    {
+	                        "Sid": "Statement-id",
+	                        "Effect": "Allow",
+	                        "Principal": { "AWS": "*" },
+	                        "Action": "sns:Publish",
+	                        "Resource": { "Ref": "SNSTopic" },
+	                        "Condition": {
+	                            "ArnLike": {
+	                                "aws:SourceArn": { "Fn::Join": [ "", [ "arn:aws:s3:::", "twitch-highlights" ]]} 
+	                            }
+	                        }
+	                    }
+	                ]
+	            },
+	            "Topics": [ { "Ref": "SNSTopic" } ]
+	        }
+	    }
+	},
+	"Outputs": {
+    	"ARN": {
+    		"Description": "The SNS ARN ID",
+    		"Value": {
+    			"Ref": "SNSTopic"
+    		},
+    		"Export": {
+    			"Name": "SNSARN"
+    		}
+    	}
+    }
+}

@@ -1,0 +1,30 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Resources": {
+		"S3": {
+			"Type": "AWS::S3::Bucket",
+			"Properties": {
+				"BucketName": "twitch-highlights",
+				"LifecycleConfiguration": {
+					"Rules": [
+						{
+							"Id": "DestroyInAWeek",
+							"Status": "Enabled",
+							"ExpirationInDays": "7"
+						}
+					]
+				},
+				"NotificationConfiguration": {
+					"TopicConfigurations": [
+						{
+							"Event": "s3:ObjectCreated:*",
+							"Topic": {
+								"Fn::ImportValue": "SNSARN"
+							}
+						}
+					]
+				}
+			}
+		}
+	}
+}
