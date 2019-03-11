@@ -1,11 +1,70 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
+	"Parameters": {
+		"GitUser": {
+			"Type": "String",
+			"Description": "Enter git username",
+			"NoEcho": "true"
+		},
+		"GitPass": {
+			"Type": "String",
+			"Description": "Enter git pass",
+			"NoEcho": "true"
+		}
+	},
 	"Resources": {
 		"EC2": {
 			"Type": "AWS::EC2::Instance",
 			"Properties": {
-				"ImageId": "ami-02da3a138888ced85",
-				"InstanceType": "t2.micro"
+				"ImageId": "ami-0a313d6098716f372",
+				"InstanceType": "t2.micro",
+				"SecurityGroups": [
+					{
+						"Ref": "InstanceSecurityGroup"
+					}
+				],
+				"KeyName": "twitch-highlights",
+				"UserData": {
+					"Fn::Base64": {
+						"Fn::Join": [
+							"",
+							[
+								"#!/bin/bash -xe\n",
+								"apt-get update -y\n",
+								"apt-get install git -y\n",
+								{
+									"Fn::Join": [
+										"",
+										[
+											"git clone https://",
+											{"Ref": "GitUser"},
+											":",
+											{"Ref": "GitPass"},
+											"@",
+											"github.com/rrao24/TwitchHighlights.git\n"
+										]
+									]
+								},
+								"apt-get install ffmpeg -y\n",
+								"add-apt-repository ppa:stebbins/handbrake-releases\n",
+								"apt-get update -y\n",
+								"apt-get install handbrake-cli -y\n"
+							]
+						]
+					}
+				}
+			}
+		},
+		"InstanceSecurityGroup": {
+			"Type": "AWS::EC2::SecurityGroup",
+			"Properties": {
+				"GroupDescription": "Enable SSH access via port 22",
+				"SecurityGroupIngress": {
+					"IpProtocol": "tcp",
+					"FromPort": "22",
+					"ToPort": "22",
+					"CidrIp": "0.0.0.0/0"
+				}
 			}
 		}
 	}

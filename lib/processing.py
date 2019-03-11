@@ -6,7 +6,7 @@ def applyHandbrake(indir, clips, outdir):
 	for clip in clips:
 		inClip = indir + '/' + clip
 		outClip = outdir + '/' + clip
-		cmd = './HandBrakeCLI -i ' + inClip + ' -o ' + outClip
+		cmd = 'HandBrakeCLI -i ' + inClip + ' -o ' + outClip
 		os.system(cmd)
 
 def mergeMP4(indir, clips, outdir, videoQuality, date):
