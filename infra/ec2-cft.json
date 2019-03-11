@@ -10,6 +10,11 @@
 			"Type": "String",
 			"Description": "Enter git pass",
 			"NoEcho": "true"
+		},
+		"TwitchId": {
+			"Type": "String",
+			"Description": "Enter twitch client ID",
+			"NoEcho": "true"
 		}
 	},
 	"Resources": {
@@ -48,7 +53,21 @@
 								"apt-get install ffmpeg -y\n",
 								"add-apt-repository ppa:stebbins/handbrake-releases\n",
 								"apt-get update -y\n",
-								"apt-get install handbrake-cli -y\n"
+								"apt-get install handbrake-cli -y\n",
+								"export ENVIRONMENT=PROD\n",
+								{
+									"Fn::Join": [
+										"",
+										[
+											"export CLIENT_ID=",
+											{"Ref": "TwitchId"},
+											"\n"
+										]
+									]
+								},
+								"cd TwitchHighlights\n",
+								"pip install -r requirements.txt\n",
+								"python run.py"
 							]
 						]
 					}
