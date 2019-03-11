@@ -15,6 +15,16 @@
 			"Type": "String",
 			"Description": "Enter twitch client ID",
 			"NoEcho": "true"
+		},
+		"AWSId": {
+			"Type": "String",
+			"Description": "AWS ID",
+			"NoEcho": "true"
+		},
+		"AWSSecret": {
+			"Type": "String",
+			"Description": "AWS Secret",
+			"NoEcho": "true"
 		}
 	},
 	"Resources": {
@@ -61,6 +71,26 @@
 										[
 											"export CLIENT_ID=",
 											{"Ref": "TwitchId"},
+											"\n"
+										]
+									]
+								},
+								{
+									"Fn::Join": [
+										"",
+										[
+											"export AWS_ID=",
+											{"Ref": "AWSId"},
+											"\n"
+										]
+									]
+								},
+								{
+									"Fn::Join": [
+										"",
+										[
+											"export AWS_SECRET=",
+											{"Ref": "AWSSecret"},
 											"\n"
 										]
 									]

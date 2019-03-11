@@ -26,6 +26,12 @@ def init():
 	global CLIENT_ID
 	CLIENT_ID = os.getenv("CLIENT_ID")
 
+	global AWS_ID
+	AWS_ID = os.getenv("AWS_ID")
+
+	global AWS_SECRET
+	AWS_SECRET = os.getenv("AWS_SECRET")
+
 	global CLIP_HEADERS
 	CLIP_HEADERS = {
 	    "Accept": "application/vnd.twitchtv.v5+json",

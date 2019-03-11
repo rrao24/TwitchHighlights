@@ -49,6 +49,8 @@ clips = FileSystem.getAllFilesInFolder(globals.TRANSCODED_FOLDER_NAME)
 for clip in clips:
 	S3.uploadToS3(inFile=globals.TRANSCODED_FOLDER_NAME + '/' + clip,
 		bucketName=globals.OUTPUTS_BUCKET_NAME,
-		outFile='clips' + '/' + globals.DATE + '/' + clip)
-S3.uploadToS3(inFile=fileName, bucketName=globals.OUTPUTS_BUCKET_NAME, outFile=fileName)
-S3.uploadToS3(inFile=globals.YT_DESCRIPTION_FILE_NAME, bucketName=globals.OUTPUTS_BUCKET_NAME, outFile='descriptions' + '/' + globals.DATE + '/' + globals.YT_DESCRIPTION_FILE_NAME)
+		outFile='clips' + '/' + globals.DATE + '/' + clip,
+		awsId=globals.AWS_ID,
+		awsSecret=globals.AWS_SECRET)
+S3.uploadToS3(inFile=fileName, bucketName=globals.OUTPUTS_BUCKET_NAME, outFile=fileName, awsId=globals.AWS_ID, awsSecret=globals.AWS_SECRET)
+S3.uploadToS3(inFile=globals.YT_DESCRIPTION_FILE_NAME, bucketName=globals.OUTPUTS_BUCKET_NAME, outFile='descriptions' + '/' + globals.DATE + '/' + globals.YT_DESCRIPTION_FILE_NAME, awsId=globals.AWS_ID, awsSecret=globals.AWS_SECRET)
