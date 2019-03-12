@@ -46,6 +46,7 @@
 							[
 								"#!/bin/bash -xe\n",
 								"apt-get update -y\n",
+								"apt-get install awscli -y\n",
 								"apt-get install git -y\n",
 								{
 									"Fn::Join": [
@@ -98,7 +99,21 @@
 								"apt-get install python3-pip -y\n",
 								"cd TwitchHighlights\n",
 								"pip3 install -r requirements.txt\n",
-								"python3 run.py"
+								"python3 run.py\n",
+								{
+									"Fn::Join": [
+										"",
+										[
+											"AWS_ACCESS_KEY_ID=",
+											{"Ref": "AWSId"},
+											" AWS_SECRET_ACCESS_KEY=",
+											{"Ref": "AWSSecret"},
+											" aws cloudformation delete-stack --stack-name ",
+											{"Ref": "AWS::StackName"},
+											" --region us-east-1"
+										]
+									]
+								}
 							]
 						]
 					}
