@@ -15,16 +15,6 @@
 			"Type": "String",
 			"Description": "Enter twitch client ID",
 			"NoEcho": "true"
-		},
-		"AWSId": {
-			"Type": "String",
-			"Description": "AWS ID",
-			"NoEcho": "true"
-		},
-		"AWSSecret": {
-			"Type": "String",
-			"Description": "AWS Secret",
-			"NoEcho": "true"
 		}
 	},
 	"Resources": {
@@ -39,15 +29,36 @@
 					}
 				],
 				"KeyName": "twitch-highlights",
+				"IamInstanceProfile": {
+					"Fn::ImportValue": "IAMProfileARN"
+				},
 				"UserData": {
 					"Fn::Base64": {
 						"Fn::Join": [
 							"",
 							[
 								"#!/bin/bash -xe\n",
+								"cd tmp\n",
+								"touch cloudwatch.txt\n",
+								"echo [general] >> cloudwatch.txt\n",
+								"echo state_file = /var/awslogs/state/agent-state >> cloudwatch.txt\n",
+								"echo \"\" >> cloudwatch.txt\n",
+								"echo [/var/log/syslog] >> cloudwatch.txt\n",
+								"echo file = /var/log/syslog >> cloudwatch.txt\n",
+								"echo log_stream_name = syslog >> cloudwatch.txt\n",
+								"echo log_group_name = twitch_highlights >> cloudwatch.txt\n",
+								"echo datetime_format = %b %d %H:%M:%S >> cloudwatch.txt\n",
+								"echo initial_position = start_of_file >> cloudwatch.txt\n",
+								"cd ..\n",
 								"apt-get update -y\n",
+								"apt-get install python2.7 python-pip -y\n",
+								"curl https://s3.amazonaws.com/aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O\n",
+								"python ./awslogs-agent-setup.py -n -r us-east-1 -c /tmp/cloudwatch.txt\n",
+								"service awslogs restart\n",
 								"apt-get install awscli -y\n",
 								"apt-get install git -y\n",
+								"apt-get install python3-pip -y\n",
+								"set +x\n",
 								{
 									"Fn::Join": [
 										"",
@@ -61,11 +72,6 @@
 										]
 									]
 								},
-								"apt-get install ffmpeg -y\n",
-								"add-apt-repository ppa:stebbins/handbrake-releases\n",
-								"apt-get update -y\n",
-								"apt-get install handbrake-cli -y\n",
-								"export ENVIRONMENT=PROD\n",
 								{
 									"Fn::Join": [
 										"",
@@ -76,27 +82,12 @@
 										]
 									]
 								},
-								{
-									"Fn::Join": [
-										"",
-										[
-											"export AWS_ID=",
-											{"Ref": "AWSId"},
-											"\n"
-										]
-									]
-								},
-								{
-									"Fn::Join": [
-										"",
-										[
-											"export AWS_SECRET=",
-											{"Ref": "AWSSecret"},
-											"\n"
-										]
-									]
-								},
-								"apt-get install python3-pip -y\n",
+								"set -x\n",
+								"apt-get install ffmpeg -y\n",
+								"add-apt-repository ppa:stebbins/handbrake-releases\n",
+								"apt-get update -y\n",
+								"apt-get install handbrake-cli -y\n",
+								"export ENVIRONMENT=PROD\n",
 								"cd TwitchHighlights\n",
 								"pip3 install -r requirements.txt\n",
 								"python3 run.py\n",
@@ -104,11 +95,7 @@
 									"Fn::Join": [
 										"",
 										[
-											"AWS_ACCESS_KEY_ID=",
-											{"Ref": "AWSId"},
-											" AWS_SECRET_ACCESS_KEY=",
-											{"Ref": "AWSSecret"},
-											" aws cloudformation delete-stack --stack-name ",
+											"aws cloudformation delete-stack --stack-name ",
 											{"Ref": "AWS::StackName"},
 											" --region us-east-1"
 										]

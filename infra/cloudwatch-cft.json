@@ -1,0 +1,12 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Resources": {
+		"Cloudwatch": {
+			"Type": "AWS::Logs::LogGroup",
+			"Properties": {
+				"LogGroupName": "twitch_highlights",
+				"RetentionInDays": 3
+			}
+		}
+	}
+}
