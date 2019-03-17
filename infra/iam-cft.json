@@ -83,9 +83,12 @@
 							{
 								"Effect": "Allow",
 								"Action": [
+									"s3:*",
 									"cloudformation:*",
 									"ec2:*",
-									"logs:*"
+									"logs:*",
+									"lambda:*",
+									"iam:*"
 								],
 								"Resource": "*"
 							}
@@ -108,7 +111,7 @@
     	"LambdaRole": {
     		"Description": "Lambda IAM Role",
     		"Value": {
-    			"Ref": "LambdaRole"
+    			"Fn::GetAtt": ["LambdaRole", "Arn"]
     		},
     		"Export": {
     			"Name": "IAMLambdaRole"

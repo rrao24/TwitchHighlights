@@ -1,0 +1,79 @@
+{
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Parameters": {
+		"GitUser": {
+			"Type": "String",
+			"Description": "Enter git username",
+			"NoEcho": "true"
+		},
+		"GitPass": {
+			"Type": "String",
+			"Description": "Enter git pass",
+			"NoEcho": "true"
+		},
+		"TwitchId": {
+			"Type": "String",
+			"Description": "Enter twitch client ID",
+			"NoEcho": "true"
+		}
+	},
+	"Resources": {
+		"Lambda": {
+			"Type": "AWS::Lambda::Function",
+			"Properties": {
+				"Code": {
+					"ZipFile": {
+						"Fn::Join": [
+							"\n",
+							[
+								"import json",
+								"import os",
+								"import boto3",
+								"def lambda_handler(event, context):",
+								"   git_user = os.getenv('GIT_USERNAME')",
+								"   git_pass = os.getenv('GIT_PASSWORD')",
+								"   client_id = os.getenv('CLIENT_ID')",
+								"   client = boto3.client('cloudformation')",
+								"   client.create_stack(",
+								"      StackName='ec2',",
+								"      TemplateURL='https://s3.amazonaws.com/twich-highlights-ec2-cft/ec2-cft.json',",
+								"      Parameters=[",
+								"         {",
+								"            'ParameterKey': 'GitUser',",
+								"            'ParameterValue': git_user",
+								"         },",
+								"         {",
+								"            'ParameterKey': 'GitPass',",
+								"            'ParameterValue': git_pass",
+								"         },",
+								"         {",
+								"            'ParameterKey': 'TwitchId',",
+								"            'ParameterValue': client_id",
+								"         }",
+								"      ]",
+								"   )",
+								"   return {",
+								"      'statusCode': 200,",
+								"      'body': 'OK'",
+								"   }"
+							]
+						]
+					}
+				},
+				"FunctionName": "KickoffTwitchHighlightsJob",
+				"Handler": "index.lambda_handler",
+				"Environment": {
+					"Variables": {
+						"GIT_USERNAME": {"Ref": "GitUser"},
+						"GIT_PASSWORD": {"Ref": "GitPass"},
+						"CLIENT_ID": {"Ref": "TwitchId"}
+					}
+				},
+				"Role": {
+					"Fn::ImportValue": "IAMLambdaRole"
+				},
+				"Runtime": "python3.7"
+			}
+		}
+	}
+}

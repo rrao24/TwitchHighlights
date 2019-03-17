@@ -25,6 +25,12 @@
 					]
 				}
 			}
+		},
+		"CFTS3": {
+			"Type": "AWS::S3::Bucket",
+			"Properties": {
+				"BucketName": "twich-highlights-ec2-cft"
+			}
 		}
 	}
 }
