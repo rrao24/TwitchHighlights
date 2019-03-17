@@ -3,6 +3,7 @@ import datetime
 import re
 import urllib.request
 import sys
+import time
 
 def getTwitchClips(clipsUrl, clipParams, clipHeaders, minsDiffForDuplicateDetection, numClips, whiteListFile):
 	request = requests.get(clipsUrl, params=clipParams, headers=clipHeaders)
@@ -24,11 +25,12 @@ def removeDuplicateClips(clips, minsDiffForDuplicateDetection):
 	#parse appropriate information
 	tmpClips = []
 
+	fmt = "%Y-%m-%dT%H:%M:%SZ"
 	for clip in clips:
 		tmpClips.append({
 		'broadcaster': clip['broadcaster']['name'],
 		'broadcasterUrl': clip['broadcaster']['channel_url'],
-		'created_at': datetime.datetime.strptime(clip['created_at'], "%Y-%m-%dT%H:%M:%SZ"),
+		'created_at': time.mktime(datetime.datetime.strptime(clip['created_at'], fmt).timetuple()),
 		'url': clip['url'],
 		'duplicate': False
 		})
@@ -38,7 +40,7 @@ def removeDuplicateClips(clips, minsDiffForDuplicateDetection):
 
 	for i in range(len(tmpClips)):
 		for j in range(i + 1, len(tmpClips)):
-			minsDiff = abs((tmpClips[i]['created_at'] - tmpClips[j]['created_at']).days * 24 * 60)
+			minsDiff = abs((tmpClips[i]['created_at'] - tmpClips[j]['created_at']) / 60)
 			sameStreamer = tmpClips[i]['broadcaster'] == tmpClips[j]['broadcaster']
 			if sameStreamer and minsDiff < minsDiffForDuplicateDetection:
 				tmpClips[i]['duplicate'] = True
