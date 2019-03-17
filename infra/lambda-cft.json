@@ -74,6 +74,36 @@
 				},
 				"Runtime": "python3.7"
 			}
+		},
+		"ScheduledRule": {
+			"Type": "AWS::Events::Rule",
+			"Properties": {
+				"Description": "Run Lambda nightly at 9PM EST",
+				"ScheduleExpression": "cron(0 1 * * ? *)",
+				"State": "ENABLED",
+				"Name": "RunNightly",
+				"Targets": [
+					{
+						"Arn": {
+							"Fn::GetAtt": ["Lambda", "Arn"]
+						},
+						"Id": "TargetFunctionV1"
+					}
+				]
+			}
+		},
+		"PermissionForEventsToInvokeLambda": {
+			"Type": "AWS::Lambda::Permission",
+			"Properties": {
+				"FunctionName": {
+					"Ref": "Lambda"
+				},
+				"Action": "lambda:InvokeFunction",
+				"Principal": "events.amazonaws.com",
+				"SourceArn": {
+					"Fn::GetAtt": ["ScheduledRule", "Arn"]
+				}
+			}
 		}
 	}
 }
