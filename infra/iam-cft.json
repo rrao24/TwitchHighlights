@@ -57,6 +57,42 @@
 				"Path": "/",
 				"MaxSessionDuration": "43200"
 			}
+		},
+		"LambdaRole": {
+			"Type": "AWS::IAM::Role",
+			"Properties": {
+				"AssumeRolePolicyDocument": {
+					"Version": "2012-10-17",
+					"Statement": [
+						{
+							"Effect": "Allow",
+							"Principal": {
+								"Service": ["lambda.amazonaws.com"]
+							},
+							"Action": [
+								"sts:AssumeRole"
+							]
+						}
+					]
+				},
+				"Path": "/",
+				"Policies": [{
+					"PolicyName": "LambdaPolicy",
+					"PolicyDocument": {
+						"Statement": [
+							{
+								"Effect": "Allow",
+								"Action": [
+									"cloudformation:*",
+									"ec2:*",
+									"logs:*"
+								],
+								"Resource": "*"
+							}
+						]
+					}
+				}]
+			}
 		}
 	},
 	"Outputs": {
@@ -67,6 +103,15 @@
     		},
     		"Export": {
     			"Name": "IAMProfileARN"
+    		}
+    	},
+    	"LambdaRole": {
+    		"Description": "Lambda IAM Role",
+    		"Value": {
+    			"Ref": "LambdaRole"
+    		},
+    		"Export": {
+    			"Name": "IAMLambdaRole"
     		}
     	}
     }
