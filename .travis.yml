@@ -8,6 +8,8 @@ env:
 
 install: pip install awscli
 
+script: echo "running..."
+
 before_deploy:
   - zip -r latest .
   - mkdir -p deploy_dest
