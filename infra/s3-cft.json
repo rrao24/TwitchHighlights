@@ -29,7 +29,13 @@
 		"CFTS3": {
 			"Type": "AWS::S3::Bucket",
 			"Properties": {
-				"BucketName": "twich-highlights-ec2-cft"
+				"BucketName": "twitch-highlights-ec2-cft"
+			}
+		},
+		"ZipS3": {
+			"Type": "AWS::S3::Bucket",
+			"Properties": {
+				"BucketName": "twitch-highlights-zip"
 			}
 		}
 	}

@@ -36,7 +36,7 @@
 								"   client = boto3.client('cloudformation')",
 								"   client.create_stack(",
 								"      StackName='ec2',",
-								"      TemplateURL='https://s3.amazonaws.com/twich-highlights-ec2-cft/ec2-cft.json',",
+								"      TemplateURL='https://s3.amazonaws.com/twitch-highlights-ec2-cft/ec2-cft.json',",
 								"      Parameters=[",
 								"         {",
 								"            'ParameterKey': 'GitUser',",
