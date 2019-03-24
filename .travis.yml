@@ -13,7 +13,6 @@ script: echo "running..."
 before_deploy:
   - zip -r latest .
   - mkdir -p deploy_dest
-  - cp latest.zip deploy_dest/$TRAVIS_COMMIT.zip
   - mv latest.zip deploy_dest/latest.zip
 
 deploy:
