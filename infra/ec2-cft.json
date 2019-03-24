@@ -1,16 +1,6 @@
 {
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Parameters": {
-		"GitUser": {
-			"Type": "String",
-			"Description": "Enter git username",
-			"NoEcho": "true"
-		},
-		"GitPass": {
-			"Type": "String",
-			"Description": "Enter git pass",
-			"NoEcho": "true"
-		},
 		"TwitchId": {
 			"Type": "String",
 			"Description": "Enter twitch client ID",
@@ -59,20 +49,9 @@
 								"apt-get install awscli -y\n",
 								"apt-get install git -y\n",
 								"apt-get install python3-pip -y\n",
-								"set +x\n",
-								{
-									"Fn::Join": [
-										"",
-										[
-											"git clone https://",
-											{"Ref": "GitUser"},
-											":",
-											{"Ref": "GitPass"},
-											"@",
-											"github.com/rrao24/TwitchHighlights.git\n"
-										]
-									]
-								},
+								"apt-get install unzip\n",
+								"aws s3 cp s3://twitch-highlights-zip/ ./ --recursive\n",
+								"unzip latest -d TwitchHighlights\n",
 								{
 									"Fn::Join": [
 										"",
@@ -83,7 +62,6 @@
 										]
 									]
 								},
-								"set -x\n",
 								"apt-get install ffmpeg -y\n",
 								"add-apt-repository ppa:stebbins/handbrake-releases\n",
 								"apt-get update -y\n",
