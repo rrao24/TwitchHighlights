@@ -14,10 +14,12 @@ before_deploy:
   - zip -r latest .
   - mkdir -p deploy_dest
   - mv latest.zip deploy_dest/latest.zip
+  - mkdir -p deploy_cft
+  - cp infra/ec2-cft.json deploy_cft/ec2-cft.json
 
 deploy:
   # push zips to s3
-    provider:          s3
+  - provider:          s3
     access_key_id:     $AWS_ACCESS_KEY_ID
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     bucket:            $AWS_BUCKET
@@ -25,4 +27,13 @@ deploy:
     local_dir:         deploy_dest
     skip_cleanup:      true
     on:
-      branch: master
+     branch: master
+  - provider:          s3
+    access_key_id:     $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    bucket:            $AWS_CFT_BUCKET
+    region:            $AWS_BUCKET_REGION
+    local_dir:         deploy_cft
+    skip_cleanup:      true
+    on:
+     branch: master
