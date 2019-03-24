@@ -6,6 +6,8 @@ env:
   global:
     - AWS_DEFAULT_REGION=us-east-1
 
+install: pip install awscli
+
 before_deploy:
   - zip -r latest .
   - mkdir -p deploy_dest
